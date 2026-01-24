@@ -268,7 +268,7 @@ correctAnswer: 1
 ],
 videos: [
 {
-url: "https://www.youtube.com/embed/PL6tNrMu3IWx2HzW2YqsQN4r7Gq-gAuWEk",
+url: "https://www.youtube.com/watch?v=dE0IZGz-tx8",
 description: "Химия. 11 класс. Практические работы. Лабораторные опыты"
 }
 ]
@@ -345,7 +345,7 @@ correctAnswer: 1
 ],
 videos: [
 {
-url: "https://www.youtube.com/results?search_query=качественные+реакции+анионы+химия",
+url: "https://www.youtube.com/watch?v=JeajUP6HKhw",
 description: "Поиск: качественные реакции анионы химия"
 }
 ]
@@ -425,7 +425,7 @@ correctAnswer: 2
 ],
 videos: [
 {
-url: "https://www.youtube.com/results?search_query=химическая+кинетика+лабораторная+работа",
+url: "https://www.youtube.com/watch?v=2ANBvvaCvNw",
 description: "Химическая кинетика лабораторная работа"
 }
 ]
@@ -501,7 +501,7 @@ correctAnswer: 1
 ],
 videos: [
 {
-url: "https://www.youtube.com/results?search_query=смещение+химического+равновесия+эксперимент",
+url: "https://www.youtube.com/watch?v=TgE54D7JVTI",
 description: "Видео по принципу Ле Шателье (демонстрация)"
 }
 ]
@@ -584,7 +584,7 @@ correctAnswer: 1
 ],
 videos: [
 {
-url: "https://www.youtube.com/results?search_query=реакция+кальция+с+водой+кислотой",
+url: "https://www.youtube.com/watch?v=qFKcpyozCK4",
 description: "Кальций + вода/кислота (металлы с кислотами/водой)"
 }
 ]
@@ -662,7 +662,7 @@ correctAnswer: 1
 ],
 videos: [
 {
-url: "https://www.youtube.com/results?search_query=алюминий+с+кислотой+щелочью+опыт",
+url: "https://www.youtube.com/watch?v=4Qthd9WtKJg",
 description: "Реакция алюминия с кислотами и щелочами"
 }
 ]
@@ -748,7 +748,7 @@ correctAnswer: 2
 ],
 videos: [
 {
-url: "https://www.youtube.com/results?search_query=свойства+раствора+HCl+химия",
+url: "https://youtu.be/R_4b_2iWFJo?si=ZvGep6t2y3pRF76b",
 description: "Поиск: свойства раствора HCl химия"
 }
 ]
@@ -825,7 +825,7 @@ correctAnswer: 2
 ],
 videos: [
 {
-url: "https://youtu.be/oXhQHTjMrL0?si=gg9eX8NvowWXB6s9",
+url: "https://www.youtube.com/watch?v=oXhQHTjMrL0",
 description: "Модель молекулы азота"
 }
 ]},
@@ -900,7 +900,7 @@ correctAnswer: 0
 }
 ],
 videos: [{
-url: "https://youtu.be/sbk_-FjEx60?si=_mAJj7L9CL6n0tA6",
+url: "https://www.youtube.com/watch?v=sbk_-FjEx60",
 description: "Модель молекулы аммиака"
 }
 ]
@@ -981,7 +981,7 @@ correctAnswer: 1
 ],
 videos: [
 {
-url: "https://youtu.be/8E3-RT5xhcs?si=3FErYesKY-P8Hryh",
+url: "https://www.youtube.com/watch?v=i0udn8oESsI",
 description: "Лабораторная работа. Свойства азотной кислоты"
 }
 ]
@@ -1061,7 +1061,7 @@ correctAnswer: 2
 ],
 videos: [
 {
-url: "https://youtu.be/Fwu9ZaTVbY8?si=vcGBgXkjYnZGMjYE",
+url: "https://www.youtube.com/watch?v=8E3-RT5xhcs",
 description: "Лабораторный опыт. Определение кальция в костях"
 }
 ]
@@ -1141,7 +1141,7 @@ correctAnswer: 1
 ],
 videos: [
 {
-url: "https://youtu.be/DX6b6Mh9zmY?si=jT1NyzEW_NRAyk8j",
+url: "https://www.youtube.com/watch?v=DX6b6Mh9zmY",
 description: "Лабораторная работа №15. Определение углерода в пище"
 }
 ]
@@ -1227,7 +1227,7 @@ correctAnswer: 1
 ],
 videos: [
 {
-url: "https://youtu.be/fU0Pg8tIEqg?si=jw32KmTyPam9GZfC",
+url: "https://www.youtube.com/watch?v=fU0Pg8tIEqg",
 description: "Лабораторная работа №16. Свойства уксусной кислоты"
 }
 ]

@@ -1,9 +1,10 @@
 export interface User {
+  role: 'guest' | 'student' | 'teacher'; // добавил guest
   student_id: string;
-  role: 'student' | 'teacher';
   name: string;
   surname: string;
 }
+
 
 export interface QuizAnswer {
   questionIndex: number;

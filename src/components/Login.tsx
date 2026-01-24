@@ -9,12 +9,23 @@ export default function Login({ onLogin }: LoginProps) {
   const [role, setRole] = useState<'student' | 'teacher'>('student');
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
-  const [student_id, setStudent_id] = useState("");
+  const [student_id, setStudent_id] = useState('');
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim() && surname.trim()) {
       onLogin({ role, student_id, name: name.trim(), surname: surname.trim() });
     }
+  };
+
+  // onClick для гостя: мгновенный вход без полей
+  const handleGuestLogin = () => {
+    onLogin({ 
+      role: 'guest' as any, // расширь User type на 'guest'
+      student_id: 'guest_' + Date.now(), // уникальный ID
+      name: 'Гость',
+      surname: ''
+    });
   };
 
   return (
@@ -30,6 +41,7 @@ export default function Login({ onLogin }: LoginProps) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Роли student/teacher без изменений */}
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-4">
               Выберите роль
@@ -60,9 +72,9 @@ export default function Login({ onLogin }: LoginProps) {
             </div>
           </div>
 
-           <div>
+          <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2">
-              Student_id
+              Student_id/Teacher_id
             </label>
             <input
               type="text"
@@ -72,6 +84,7 @@ export default function Login({ onLogin }: LoginProps) {
               required
             />
           </div>
+
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2">
               Фамилия
@@ -104,7 +117,16 @@ export default function Login({ onLogin }: LoginProps) {
           >
             Войти
           </button>
-        </form>
+
+          {/* ✅ Кнопка гостя */}
+          <button 
+            type="button" 
+            onClick={handleGuestLogin}
+            className="w-full bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold py-3 px-4 rounded-lg hover:shadow-lg transition-all duration-200 hover:from-gray-700 hover:to-gray-800"
+          >
+            Войти как гость (просмотр без отправки баллов)
+          </button>
+        </form> 
       </div>
     </div>
   );
