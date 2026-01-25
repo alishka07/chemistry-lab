@@ -1,8 +1,3 @@
-// openaiService.ts
-
-// Сервис для работы с OpenAI API через Supabase Edge Function
-// ОБНОВЛЁН: используем Supabase client-style fetch (без process.env в браузере)
-
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
@@ -22,16 +17,6 @@ export interface LabWorkContext {
   score: number;
   totalQuestions: number;
 }
-
-// === НАСТРОЙКИ (замени на свои) ===
-// Если используешь Vite — добавь в .env:
-// VITE_SUPABASE_URL=https://your-project.supabase.co
-// VITE_SUPABASE_ANON_KEY=your-anon-key
-// VITE_OPENAI_FUNCTION_NAME=your-function-name  (имя, под которым задеплоил edge function, напр. openai-explain)
-
-// Если CRA (Create React App) — используй REACT_APP_ префикс и process.env
-// Если Next.js — process.env.NEXT_PUBLIC_...
-
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://cvftbqgniazflaobeheq.supabase.co';
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2ZnRicWduaWF6Zmxhb2JlaGVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc0NjczNjYsImV4cCI6MjA4MzA0MzM2Nn0.aI-RUd58w56ZWuBM5WjxydWIQU8mYdWw1N1mbVqc50o';
 const FUNCTION_NAME = import.meta.env.VITE_OPENAI_FUNCTION_NAME || 'smart-endpoint'; // ← ИМЯ ТВОЕЙ EDGE FUNCTION
