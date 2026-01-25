@@ -1,6 +1,7 @@
-// Сервис для работы с OpenAI API
-// ВАШ КЛЮЧ OpenAI API
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+// openaiService.ts
+
+// Сервис для работы с OpenAI API через Supabase Edge Function
+// ОБНОВЛЁН: используем Supabase client-style fetch (без process.env в браузере)
 
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
@@ -22,8 +23,23 @@ export interface LabWorkContext {
   totalQuestions: number;
 }
 
+// === НАСТРОЙКИ (замени на свои) ===
+// Если используешь Vite — добавь в .env:
+// VITE_SUPABASE_URL=https://your-project.supabase.co
+// VITE_SUPABASE_ANON_KEY=your-anon-key
+// VITE_OPENAI_FUNCTION_NAME=your-function-name  (имя, под которым задеплоил edge function, напр. openai-explain)
+
+// Если CRA (Create React App) — используй REACT_APP_ префикс и process.env
+// Если Next.js — process.env.NEXT_PUBLIC_...
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://cvftbqgniazflaobeheq.supabase.co';
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2ZnRicWduaWF6Zmxhb2JlaGVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc0NjczNjYsImV4cCI6MjA4MzA0MzM2Nn0.aI-RUd58w56ZWuBM5WjxydWIQU8mYdWw1N1mbVqc50o';
+const FUNCTION_NAME = import.meta.env.VITE_OPENAI_FUNCTION_NAME || 'smart-endpoint'; // ← ИМЯ ТВОЕЙ EDGE FUNCTION
+
+const edgeFunctionUrl = `${SUPABASE_URL}/functions/v1/${FUNCTION_NAME}`;
+
 /**
- * Получение ответа от OpenAI API
+ * Получение ответа от OpenAI API через Supabase Edge Function
  */
 export const getAIResponse = async (
   userInput: string, 
@@ -47,29 +63,30 @@ export const getAIResponse = async (
       }
     ];
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch(edgeFunctionUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,  // Anon key для публичного доступа
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
         messages: messages,
+        model: 'gpt-4o-mini',
         temperature: 0.7,
         max_tokens: 1500,
       }),
     });
 
     if (!response.ok) {
-      throw new Error(`API Error: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`API Error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
-    return data.choices[0].message.content.trim();
+    return data.explanation?.trim() || 'Нет ответа от ИИ';
     
   } catch (error) {
-    console.error('OpenAI API Error:', error);
+    console.error('Supabase Edge Function Error:', error);
     return 'Извините, произошла ошибка при получении ответа от ИИ. Пожалуйста, попробуйте позже.';
   }
 };
@@ -132,7 +149,3 @@ export const getInitialAIMessage = (context: LabWorkContext): string => {
 
 Задавайте вопросы по лабораторной работе, и я помогу вам разобраться!`;
 };
-
-/**
- * Проверка наличия API ключа
- */
