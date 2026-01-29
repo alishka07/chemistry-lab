@@ -1,10 +1,13 @@
 import { Submission } from '../types';
+import { useTranslation } from "react-i18next";
 
 interface TeacherDashboardProps {
   submissions: Submission[];
 }
 
 export default function TeacherDashboard({ submissions }: TeacherDashboardProps) {
+  const { t } = useTranslation();
+
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('ru-RU', {
       year: 'numeric',
@@ -25,13 +28,13 @@ export default function TeacherDashboard({ submissions }: TeacherDashboardProps)
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
       <div className="mb-10">
-        <h1 className="text-3xl font-bold text-gray-900">Результаты студентов</h1>
-        <p className="text-gray-600 mt-2">Всего отправок: {submissions.length}</p>
+        <h1 className="text-3xl font-bold text-gray-900">{t('extra:teacherdashboard.title')}</h1>
+        <p className="text-gray-600 mt-2">{t('extra:teacherdashboard.total_submissions')}: {submissions.length}</p>
       </div>
 
       {submissions.length === 0 ? (
         <div className="bg-white rounded-2xl shadow-md p-12 text-center">
-          <p className="text-lg text-gray-600">Пока нет результатов</p>
+          <p className="text-lg text-gray-600">{t('extra:teacherdashboard.empty')}</p>
         </div>
       ) : (
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -40,19 +43,19 @@ export default function TeacherDashboard({ submissions }: TeacherDashboardProps)
               <thead>
                 <tr className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
                   <th className="px-6 py-4 text-left font-semibold text-sm">
-                    Фамилия
+                    {t('extra:teacherdashboard.table.surname')}
                   </th>
                   <th className="px-6 py-4 text-left font-semibold text-sm">
-                    Имя
+                    {t('extra:teacherdashboard.table.name')}
                   </th>
                   <th className="px-6 py-4 text-left font-semibold text-sm">
-                    Лабораторная работа
+                    {t('extra:teacherdashboard.table.labwork')}
                   </th>
                   <th className="px-6 py-4 text-left font-semibold text-sm">
-                    Оценка
+                    {t('extra:teacherdashboard.table.score')}
                   </th>
                   <th className="px-6 py-4 text-left font-semibold text-sm">
-                    Дата и время
+                    {t('extra:teacherdashboard.table.datetime')}
                   </th>
                 </tr>
               </thead>

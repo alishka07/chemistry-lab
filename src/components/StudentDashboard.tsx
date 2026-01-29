@@ -1,6 +1,8 @@
 import { Folder } from 'lucide-react';
-import { quarters } from '../labworks';
+import { getQuarters } from '../labworks';
 import { User } from '../types';
+import { useTranslation } from "react-i18next";
+import type { Quarter } from '../labworks'; // Импортируем тип
 
 interface StudentDashboardProps {
   user: User;
@@ -8,15 +10,21 @@ interface StudentDashboardProps {
 }
 
 export default function StudentDashboard({ user, onSelectQuarter }: StudentDashboardProps) {
+  const { t: tExtra } = useTranslation("extra"); // Для extra namespace (studentdashboard)
+  const { t } = useTranslation(); // Для основного namespace (quarters)
+
+  // Получаем quarters с использованием t
+  const quartersData: Quarter[] = getQuarters(t);
+
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
       <div className="mb-10">
-        <h2 className="text-2xl font-bold text-gray-900">Четверти</h2>
-        <p className="text-gray-600 mt-2">Выберите четверть для просмотра лабораторных работ</p>
+        <h2 className="text-2xl font-bold text-gray-900">{tExtra('extra:studentdashboard.title')}</h2>
+        <p className="text-gray-600 mt-2">{tExtra('extra:studentdashboard.subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {quarters.map((quarter) => (
+        {quartersData.map((quarter: Quarter) => (
           <button
             key={quarter.id}
             onClick={() => onSelectQuarter(quarter.id)}
@@ -33,14 +41,8 @@ export default function StudentDashboard({ user, onSelectQuarter }: StudentDashb
                 <div className="mt-4 flex items-center gap-2">
                   <div className="h-1 w-1 bg-blue-600 rounded-full"></div>
                   <p className="text-gray-600 font-medium">
-                    {quarter.labWorks.length} {
-                      quarter.labWorks.length % 10 === 1 && quarter.labWorks.length % 100 !== 11
-                        ? 'работа'
-                        : quarter.labWorks.length % 10 >= 2 && quarter.labWorks.length % 10 <= 4 && (quarter.labWorks.length % 100 < 10 || quarter.labWorks.length % 100 >= 20)
-                        ? 'работы'
-                        : 'работ'
-                    }
-                  </p>
+  {quarter.labWorks.length} {tExtra('extra:studentdashboard.works_count', { count: quarter.labWorks.length })}
+</p>
                 </div>
               </div>
               <div className="text-3xl font-light text-gray-200 group-hover:text-blue-100 transition-colors">

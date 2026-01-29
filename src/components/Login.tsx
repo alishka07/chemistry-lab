@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { User } from '../types';
+import { useTranslation } from "react-i18next";
+import i18n from '../i18n'; // Импортируем i18n для смены языка (предполагая путь к i18n.tsx)
 
 interface LoginProps {
   onLogin: (user: User) => void;
 }
 
 export default function Login({ onLogin }: LoginProps) {
+  const { t } = useTranslation("extra");
+
   const [role, setRole] = useState<'student' | 'teacher'>('student');
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
@@ -23,9 +27,18 @@ export default function Login({ onLogin }: LoginProps) {
     onLogin({ 
       role: 'guest' as any, // расширь User type на 'guest'
       student_id: 'guest_' + Date.now(), // уникальный ID
-      name: 'Гость',
+      name: t('extra:login.guest_name'),
       surname: ''
     });
+  };
+
+  // Функции для смены языка
+  const changeToRussian = () => {
+    i18n.changeLanguage('ru');
+  };
+
+  const changeToKazakh = () => {
+    i18n.changeLanguage('kk');
   };
 
   return (
@@ -33,10 +46,10 @@ export default function Login({ onLogin }: LoginProps) {
       <div className="bg-white rounded-2xl shadow-xl p-10 w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Лабораторные работы
+            {t('extra:login.title')}
           </h1>
           <p className="text-gray-600 text-lg">
-            Платформа для изучения химии
+            {t('extra:login.subtitle')}
           </p>
         </div>
 
@@ -44,7 +57,7 @@ export default function Login({ onLogin }: LoginProps) {
           {/* Роли student/teacher без изменений */}
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-4">
-              Выберите роль
+              {t('extra:login.choose_role')}
             </label>
             <div className="space-y-3">
               <label className="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all"
@@ -56,7 +69,7 @@ export default function Login({ onLogin }: LoginProps) {
                   onChange={(e) => setRole(e.target.value as 'student')}
                   className="mr-3 w-4 h-4 accent-blue-600"
                 />
-                <span className="font-medium text-gray-700">Студент</span>
+                <span className="font-medium text-gray-700">{t('login.roles.student')}</span>
               </label>
               <label className="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all"
                 style={{ borderColor: role === 'teacher' ? '#3b82f6' : undefined, backgroundColor: role === 'teacher' ? '#eff6ff' : undefined }}>
@@ -67,14 +80,14 @@ export default function Login({ onLogin }: LoginProps) {
                   onChange={(e) => setRole(e.target.value as 'teacher')}
                   className="mr-3 w-4 h-4 accent-blue-600"
                 />
-                <span className="font-medium text-gray-700">Преподаватель</span>
+                <span className="font-medium text-gray-700">{t('login.roles.teacher')}</span>
               </label>
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2">
-              Student_id/Teacher_id
+              {t('extra:login.fields.id')}
             </label>
             <input
               type="text"
@@ -87,7 +100,7 @@ export default function Login({ onLogin }: LoginProps) {
 
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2">
-              Фамилия
+              {t('extra:login.fields.surname')}
             </label>
             <input
               type="text"
@@ -100,7 +113,7 @@ export default function Login({ onLogin }: LoginProps) {
 
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2">
-              Имя
+              {t('extra:login.fields.name')}
             </label>
             <input
               type="text"
@@ -115,7 +128,7 @@ export default function Login({ onLogin }: LoginProps) {
             type="submit"
             className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-3 px-4 rounded-lg hover:shadow-lg transition-all duration-200 hover:from-blue-700 hover:to-blue-800"
           >
-            Войти
+            {t('extra:login.buttons.submit')}
           </button>
 
           {/* ✅ Кнопка гостя */}
@@ -124,9 +137,25 @@ export default function Login({ onLogin }: LoginProps) {
             onClick={handleGuestLogin}
             className="w-full bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold py-3 px-4 rounded-lg hover:shadow-lg transition-all duration-200 hover:from-gray-700 hover:to-gray-800"
           >
-            Войти как гость (просмотр без отправки баллов)
+            {t('extra:login.buttons.guest')}
           </button>
         </form> 
+
+        {/* ✅ Кнопки для выбора языка внизу */}
+        <div className="flex justify-center gap-4 mt-6">
+          <button 
+            onClick={changeToRussian}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Русский
+          </button>
+          <button 
+            onClick={changeToKazakh}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Қазақша
+          </button>
+        </div>
       </div>
     </div>
   );

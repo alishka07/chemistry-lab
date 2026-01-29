@@ -1,0 +1,111 @@
+{
+  "common": {
+    "back": "Назад"
+  },
+
+  "header": {
+    "title": "Платформа для изучения химии",
+    "logout": "Выйти"
+  },
+
+  "login": {
+    "title": "Лабораторные работы",
+    "subtitle": "Платформа для изучения химии",
+
+    "choose_role": "Выберите роль",
+
+    "roles": {
+      "student": "Студент",
+      "teacher": "Преподаватель"
+    },
+
+    "fields": {
+      "id": "Student_id / Teacher_id",
+      "surname": "Фамилия",
+      "name": "Имя"
+    },
+
+    "buttons": {
+      "submit": "Войти",
+      "guest": "Войти как гость (просмотр без отправки баллов)"
+    },
+
+    "guest_name": "Гость"
+  },
+
+  "labworkdetail": {
+    "not_found": "Лабораторная работа не найдена",
+
+    "checking_error": "Ошибка при проверке существующего результата:",
+    "quest_submitted": "Результат рассчитан локально",
+    "incorrect_id": "Некорректный ID студента",
+    "error_sending": "Ошибка при отправке теста:",
+    "already_submitted": "Вы уже сдавали этот тест",
+    "unrecognized_error": "Неизвестная ошибка",
+
+    "result_show": "Ваш результат:",
+    "quest_mode": "(режим гостя)",
+
+    "section_theory": "Теория",
+    "section_equipment": "Оборудование",
+    "section_procedure": "Порядок выполнения",
+    "section_quiz": "Тест",
+
+    "answer_correct": "✓ Правильно",
+    "answer_incorrect": "✗ Неправильно",
+
+    "submit_success": "Тест успешно отправлен!",
+    "submit_sending": "Отправка...",
+    "submit_already": "Тест уже отправлен",
+    "submit_btn": "Отправить",
+
+    "result_title": "Ваш результат",
+
+    "ai_error": "Ошибка при обработке запроса ИИ",
+    "ai_apologize": "Извините, произошла ошибка. Пожалуйста, попробуйте еще раз.",
+
+    "ai": {
+      "open_btn": "Обсудить результаты с ИИ-помощником",
+      "title": "ИИ-помощник",
+      "labwork_prefix": "Лабораторная работа:",
+      "reset_title": "Начать новый диалог",
+      "you_label": "Вы",
+      "assistant_label": "ИИ-помощник",
+      "thinking": "ИИ-помощник думает...",
+      "input_placeholder": "Введите ваш вопрос...",
+      "send_btn": "Отправить"
+    },
+
+    "quick_questions": [
+      "Помоги разобраться с ошибками в тесте",
+      "Объясни теорию этой лабораторной",
+      "Как правильно выполнять эту работу?",
+      "Какое оборудование нужно?"
+    ]
+  },
+  "quaterview":{
+    "not_found": "Четверть не найдена",
+    "total_works": "Всего работ"
+  },
+  "studentdashboard": {
+    "title": "Четверти",
+    "subtitle": "Выберите четверть для просмотра лабораторных работ",
+    "works_count_one": "работа",
+  "works_count_few": "работы", 
+  "works_count_many": "работ"
+  },
+
+  "teacherdashboard": {
+    "title": "Результаты студентов",
+    "total_submissions": "Всего отправок",
+    "empty": "Пока нет результатов",
+
+    "table": {
+      "surname": "Фамилия",
+      "name": "Имя",
+      "labwork": "Лабораторная работа",
+      "score": "Оценка",
+      "datetime": "Дата и время"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Send, User as UserIcon, Bot, RefreshCw } from 'lucide-react';
-import { quarters } from '../labworks';
+import { getQuarters } from '../labworks';
 import { User, Submission, QuizAnswer } from '../types';
 import { submitResult, getExistingResult, TestResult } from '../supabase/resultsService';
 import { 
@@ -8,6 +8,8 @@ import {
   getInitialAIMessage, 
   LabWorkContext 
 } from '../supabase/openaiService';
+import { useTranslation } from "react-i18next";
+import type { LabWork, Quarter } from '../labworks'; // Импортируем типы
 
 interface LabWorkDetailProps {
   labWorkId: number;
@@ -31,9 +33,15 @@ export default function LabWorkDetail({
   onSubmitQuiz,
   existingSubmission,
 }: LabWorkDetailProps) {
-  const labWork = quarters
-    .flatMap((q) => q.labWorks)
-    .find((lw) => lw.id === labWorkId);
+  const { t: tExtra } = useTranslation("extra"); // Для UI строк из extra namespace
+  const { t } = useTranslation(); // Для основного namespace (quarters и labs)
+
+  // Получаем quarters с использованием t из основного namespace
+  const quartersData: Quarter[] = getQuarters(t);
+
+  const labWork: LabWork | undefined = quartersData
+    .flatMap((q: Quarter) => q.labWorks)
+    .find((lw: LabWork) => lw.id === labWorkId);
 
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
   const [submitted, setSubmitted] = useState(!!existingSubmission);
@@ -73,14 +81,14 @@ export default function LabWorkDetail({
           }
         }
       } catch (error) {
-        console.error('Ошибка при проверке существующего результата:', error);
+        console.error(tExtra('extra:labworkdetail.checking_error'), error);
       }
     };
 
     if (!existingSubmission && user.student_id && user.role !== 'guest') {
       checkExistingSubmission();
     }
-  }, [labWorkId, user.student_id, user.role, existingSubmission]);
+  }, [labWorkId, user.student_id, user.role, existingSubmission, tExtra]);
 
   // Прокрутка к новым сообщениям
   useEffect(() => {
@@ -90,7 +98,7 @@ export default function LabWorkDetail({
   }, [chatMessages]);
 
   if (!labWork) {
-    return <div>Лабораторная работа не найдена</div>;
+    return <div>{tExtra('extra:labworkdetail.not_found')}</div>;
   }
 
   const handleAnswerSelect = (questionIndex: number, optionIndex: number) => {
@@ -131,7 +139,7 @@ export default function LabWorkDetail({
       if (user.role === 'guest') {
         response = {
           success: true,
-          message: 'Результат рассчитан локально',
+          message: tExtra('extra:labworkdetail.quest_submitted'),
           data: {
             score: calculatedScore,
             total: labWork.quiz.length,
@@ -141,7 +149,7 @@ export default function LabWorkDetail({
         const studentIdNum = Number(user.student_id);
 
         if (isNaN(studentIdNum) || studentIdNum <= 0) {
-          throw new Error('Некорректный ID студента');
+          throw new Error(tExtra('extra:labworkdetail.incorrect_id'));
         }
 
         const testResult: TestResult = {
@@ -166,9 +174,9 @@ export default function LabWorkDetail({
       };
 
       if (user.role === 'guest') {
-        alert(`Ваш результат: ${resultData.score}/${resultData.total} (режим гостя)`);
+        alert(`${tExtra('extra:labworkdetail.result_show')} ${resultData.score}/${resultData.total} ${tExtra('extra:labworkdetail.quest_mode')}`);
       } else {
-        alert(`Ваш результат: ${resultData.score}/${resultData.total}`);
+        alert(`${tExtra('extra:labworkdetail.result_show')} ${resultData.score}/${resultData.total}`);
         if (response.success) {
           alert(response.message);
         }
@@ -186,17 +194,19 @@ export default function LabWorkDetail({
       };
 
       onSubmitQuiz(submission);
-    } catch (error: any) {
-      console.error('Ошибка при отправке теста:', error);
+    } catch (error: unknown) { // Исправляем тип error на unknown
+      console.error(tExtra('extra:labworkdetail.error_sending'), error);
       setIsSubmitting(false);
 
-      if (error.message === 'Вы уже сдавали этот тест') {
-        setSubmitError('Вы уже сдавали этот тест ранее');
+      const errorMessage = error instanceof Error ? error.message : tExtra('extra:labworkdetail.unrecognized_error');
+
+      if (errorMessage === tExtra('extra:labworkdetail.already_submitted')) {
+        setSubmitError(tExtra('extra:labworkdetail.already_submitted'));
         setSubmitted(true);
-      } else if (error.message?.includes('Некорректный ID студента')) {
-        setSubmitError(error.message);
+      } else if (errorMessage?.includes(tExtra('extra:labworkdetail.incorrect_id'))) {
+        setSubmitError(errorMessage);
       } else {
-        setSubmitError(`Ошибка при отправке: ${error.message || 'Неизвестная ошибка'}`);
+        setSubmitError(`${tExtra('extra:labworkdetail.error_sending')} ${errorMessage}`);
       }
     }
   };
@@ -269,13 +279,13 @@ export default function LabWorkDetail({
       };
       
       setChatMessages(prev => [...prev, aiMsg]);
-    } catch (error) {
-      console.error('Ошибка при получении ответа ИИ:', error);
+    } catch (error: unknown) { // unknown для error
+      console.error(tExtra('extra:labworkdetail.ai_error'), error);
       
       const errorMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'Извините, произошла ошибка. Пожалуйста, попробуйте еще раз.',
+        content: tExtra('extra:labworkdetail.ai_apologize'),
         timestamp: new Date()
       };
       
@@ -291,12 +301,7 @@ export default function LabWorkDetail({
   };
 
   // Быстрые вопросы для ИИ
-  const quickQuestions = [
-    "Помоги разобраться с ошибками в тесте",
-    "Объясни теорию этой лабораторной",
-    "Как правильно выполнять эту работу?",
-    "Какое оборудование нужно?"
-  ];
+  const quickQuestions = tExtra('extra:labworkdetail.quick_questions', { returnObjects: true }) as string[];
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
@@ -305,7 +310,7 @@ export default function LabWorkDetail({
         className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-8 transition-colors hover:gap-3"
       >
         <ArrowLeft className="w-5 h-5" />
-        Назад
+        {tExtra('extra:common.back')}
       </button>
 
       <div className="bg-white rounded-2xl shadow-xl p-10">
@@ -337,25 +342,25 @@ export default function LabWorkDetail({
 
         {labWork.description && (
           <div className="mb-8 pb-8 border-b border-gray-200">
-            <p className="text-lg text-gray-700 leading-relaxed">{labWork.description}</p>
+            <p className="text-gray-700 text-lg leading-relaxed">{labWork.description}</p>
           </div>
         )}
 
         {labWork.theory && (
           <div className="mb-8 pb-8 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Теория</h2>
-            <p className="text-gray-700 leading-relaxed text-lg">{labWork.theory}</p>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">{tExtra('labworkdetail.theory')}</h2>
+            <p className="text-gray-700 leading-relaxed whitespace-pre-line">{labWork.theory}</p>
           </div>
         )}
 
         {labWork.equipment && labWork.equipment.length > 0 && (
           <div className="mb-8 pb-8 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Оборудование</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">{tExtra('labworkdetail.equipment')}</h2>
             <ul className="space-y-3">
               {labWork.equipment.map((item, index) => (
-                <li key={index} className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
-                  <span className="text-gray-700 text-lg">{item}</span>
+                <li key={index} className="flex items-center gap-3 text-gray-700">
+                  <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
+                  {item}
                 </li>
               ))}
             </ul>
@@ -364,14 +369,11 @@ export default function LabWorkDetail({
 
         {labWork.procedure && labWork.procedure.length > 0 && (
           <div className="mb-8 pb-8 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Порядок выполнения</h2>
-            <ol className="space-y-4">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">{tExtra('labworkdetail.procedure')}</h2>
+            <ol className="space-y-4 list-decimal list-inside">
               {labWork.procedure.map((step, index) => (
-                <li key={index} className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <span className="text-blue-600 font-semibold text-sm">{index + 1}</span>
-                  </div>
-                  <span className="text-gray-700 text-lg leading-relaxed pt-0.5">{step}</span>
+                <li key={index} className="text-gray-700 pl-2">
+                  {step}
                 </li>
               ))}
             </ol>
@@ -380,62 +382,61 @@ export default function LabWorkDetail({
 
         {labWork.quiz && labWork.quiz.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Тест</h2>
-            <div className="space-y-7">
-              {labWork.quiz.map((question, qIndex) => (
-                <div key={qIndex} className="bg-gray-50 rounded-xl p-6">
-                  <p className="font-semibold text-gray-900 mb-4 text-lg">
-                    <span className="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm mr-3">
-                      {qIndex + 1}
-                    </span>
-                    {question.question}
-                  </p>
-                  <div className="space-y-3 ml-10">
-                    {question.options.map((option, oIndex) => {
-                      const isSelected = selectedAnswers[qIndex] === oIndex;
-                      const isCorrect = question.correctAnswer === oIndex;
-                      const showResult = submitted;
-
-                      return (
-                        <label
-                          key={oIndex}
-                          className={`flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
-                            submitted
-                              ? isCorrect
-                                ? 'border-green-500 bg-green-50 shadow-sm'
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6">{tExtra('labworkdetail.quiz')}</h2>
+            <div className="space-y-8">
+              {labWork.quiz.map((question, qIndex) => {
+                const showResult = submitted && score !== null;
+                const correctIndex = question.correctAnswer;
+                return (
+                  <div key={qIndex} className="bg-gray-50 p-6 rounded-xl">
+                    <h3 className="font-medium text-lg text-gray-900 mb-4">
+                      {qIndex + 1}. {question.question}
+                    </h3>
+                    <div className="space-y-3">
+                      {question.options.map((option, oIndex) => {
+                        const isSelected = selectedAnswers[qIndex] === oIndex;
+                        const isCorrect = oIndex === correctIndex;
+                        return (
+                          <label
+                            key={oIndex}
+                            className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all ${
+                              showResult
+                                ? isCorrect
+                                  ? 'border-green-500 bg-green-50 shadow-sm'
                                 : isSelected
-                                ? 'border-red-500 bg-red-50 shadow-sm'
-                                : 'border-gray-300 bg-white'
-                              : isSelected
-                              ? 'border-blue-500 bg-blue-50 shadow-md'
-                              : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
-                          }`}
-                        >
-                          <input
-                            type="radio"
-                            name={`question-${qIndex}`}
-                            checked={isSelected}
-                            onChange={() => handleAnswerSelect(qIndex, oIndex)}
-                            disabled={submitted}
-                            className="mr-3 w-4 h-4 accent-blue-600"
-                          />
-                          <span className="text-gray-700 text-base flex-1">{option}</span>
-                          {showResult && isCorrect && (
-                            <span className="ml-auto text-green-600 text-sm font-semibold">
-                              ✓ Правильно
-                            </span>
-                          )}
-                          {showResult && isSelected && !isCorrect && (
-                            <span className="ml-auto text-red-600 text-sm font-semibold">
-                              ✗ Неправильно
-                            </span>
-                          )}
-                        </label>
-                      );
-                    })}
+                                  ? 'border-red-500 bg-red-50 shadow-sm'
+                                  : 'border-gray-300 bg-white'
+                                : isSelected
+                                  ? 'border-blue-500 bg-blue-50 shadow-md'
+                                  : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name={`question-${qIndex}`}
+                              checked={isSelected}
+                              onChange={() => handleAnswerSelect(qIndex, oIndex)}
+                              disabled={submitted}
+                              className="mr-3 w-4 h-4 accent-blue-600"
+                            />
+                            <span className="text-gray-700 text-base flex-1">{option}</span>
+                            {showResult && isCorrect && (
+                              <span className="ml-auto text-green-600 text-sm font-semibold">
+                                {tExtra('extra:labworkdetail.answer_correct')}
+                              </span>
+                            )}
+                            {showResult && isSelected && !isCorrect && (
+                              <span className="ml-auto text-red-600 text-sm font-semibold">
+                                {tExtra('extra:labworkdetail.answer_incorrect')}
+                              </span>
+                            )}
+                          </label>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {submitError && (
@@ -446,7 +447,7 @@ export default function LabWorkDetail({
 
             {submitSuccess && (
               <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-green-700">Тест успешно отправлен!</p>
+                <p className="text-green-700">{tExtra('extra:labworkdetail.submit_success')}</p>
               </div>
             )}
 
@@ -454,7 +455,7 @@ export default function LabWorkDetail({
               <div className="mt-8 space-y-6">
                 <div className="p-6 bg-gradient-to-r from-blue-50 to-blue-100 border-2 border-blue-300 rounded-xl">
                   <p className="text-center">
-                    <span className="block text-sm font-medium text-blue-600 mb-2">Ваш результат</span>
+                    <span className="block text-sm font-medium text-blue-600 mb-2">{tExtra('extra:labworkdetail.result_title')}</span>
                     <span className="text-4xl font-bold text-blue-900">
                       {score}/{labWork.quiz.length}
                     </span>
@@ -470,7 +471,7 @@ export default function LabWorkDetail({
                   className="w-full py-4 px-6 rounded-lg font-semibold text-lg transition-all duration-200 bg-gradient-to-r from-green-600 to-green-700 text-white hover:shadow-lg hover:from-green-700 hover:to-green-800 flex items-center justify-center gap-3"
                 >
                   <span className="text-xl">💬</span>
-                  Обсудить результаты с ИИ-помощником
+                  {tExtra('extra:labworkdetail.ai.open_btn')}
                 </button>
               </div>
             )}
@@ -489,10 +490,10 @@ export default function LabWorkDetail({
           }`}
         >
           {isSubmitting
-            ? 'Отправка...'
+            ? tExtra('extra:labworkdetail.submit_sending')
             : submitted
-            ? 'Тест уже отправлен'
-            : 'Отправить'}
+            ? tExtra('extra:labworkdetail.submit_already')
+            : tExtra('extra:labworkdetail.submit_btn')}
         </button>
       </div>
 
@@ -507,15 +508,15 @@ export default function LabWorkDetail({
                   <Bot className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900">ИИ-помощник</h3>
-                  <p className="text-sm text-gray-600">Лабораторная работа: {labWork.title}</p>
+                  <h3 className="text-lg font-bold text-gray-900">{tExtra('labworkdetail.ai.title')}</h3>
+                  <p className="text-sm text-gray-600">{tExtra('labworkdetail.ai.labwork_prefix')} {labWork.title}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={resetChat}
                   className="p-2 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                  title="Начать новый диалог"
+                  title={tExtra('extra:labworkdetail.ai.reset_title')}
                 >
                   <RefreshCw className="w-5 h-5" />
                 </button>
@@ -543,12 +544,12 @@ export default function LabWorkDetail({
                       {msg.role === 'user' ? (
                         <>
                           <UserIcon className="w-4 h-4 text-blue-600" />
-                          <span className="text-sm font-medium text-blue-600">Вы</span>
+                          <span className="text-sm font-medium text-blue-600">{tExtra('labworkdetail.ai.you_label')}</span>
                         </>
                       ) : (
                         <>
                           <Bot className="w-4 h-4 text-green-600" />
-                          <span className="text-sm font-medium text-green-600">ИИ-помощник</span>
+                          <span className="text-sm font-medium text-green-600">{tExtra('labworkdetail.ai.assistant_label')}</span>
                         </>
                       )}
                       <span className="text-xs text-gray-500 ml-auto">
@@ -568,7 +569,7 @@ export default function LabWorkDetail({
                     <div className="flex items-center gap-2">
                       <Bot className="w-4 h-4 text-green-600" />
                       <span className="text-sm font-medium text-green-600">
-                        ИИ-помощник думает...
+                        {tExtra('labworkdetail.ai.thinking')}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 mt-2">
@@ -604,7 +605,7 @@ export default function LabWorkDetail({
                   value={userMessage}
                   onChange={(e) => setUserMessage(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder="Введите ваш вопрос..."
+                  placeholder={tExtra('extra:labworkdetail.ai.input_placeholder')}
                   className="flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                   disabled={isAIThinking}
                 />
@@ -618,7 +619,7 @@ export default function LabWorkDetail({
                   }`}
                 >
                   <Send className="w-5 h-5" />
-                  Отправить
+                  {tExtra('extra:labworkdetail.ai.send_btn')}
                 </button>
               </div>
             </div>

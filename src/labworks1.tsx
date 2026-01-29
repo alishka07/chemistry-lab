@@ -14,7 +14,6 @@ interface LabWork {
     url: string;
     description: string;
   }[];
-  conclusion: string;
 }
 
 interface Quarter {
@@ -108,7 +107,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q1.labs.lab1.videos.v1'),
             },
           ],
-          conclusion: t('translation:quarters.q1.labs.lab1.conclusion'),
         },
         {
           id: 2,
@@ -169,7 +167,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q1.labs.lab2.videos.v2'),
             },
           ],
-          conclusion: t('translation:quarters.q1.labs.lab2.conclusion'),
         },
         {
           id: 3,
@@ -251,7 +248,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q1.labs.lab3.videos.v2'),
             },
           ],
-          conclusion: t('translation:quarters.q1.labs.lab3.conclusion'),
         },
         {
           id: 4,
@@ -328,7 +324,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q1.labs.lab4.videos.v1'),
             },
           ],
-          conclusion: t('translation:quarters.q1.labs.lab4.conclusion'),
         },
         {
           id: 5,
@@ -406,7 +401,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q1.labs.lab5.videos.v1'),
             },
           ],
-          conclusion: t('translation:quarters.q1.labs.lab5.conclusion'),
         },
         {
           id: 6,
@@ -487,7 +481,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q1.labs.lab6.videos.v1'),
             },
           ],
-          conclusion: t('translation:quarters.q1.labs.lab6.conclusion'),
         },
         {
           id: 7,
@@ -564,7 +557,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q1.labs.lab7.videos.v1'),
             },
           ],
-          conclusion: t('translation:quarters.q1.labs.lab7.conclusion'),
         },
       ],
     },
@@ -648,7 +640,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q2.labs.lab8.videos.v1'),
             },
           ],
-          conclusion: t('translation:quarters.q2.labs.lab8.conclusion'),
         },
         {
           id: 9,
@@ -727,7 +718,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q2.labs.lab9.videos.v1'),
             },
           ],
-          conclusion: t('translation:quarters.q2.labs.lab9.conclusion'),
         },
       ],
     },
@@ -815,7 +805,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q3.labs.lab10.videos.v1'),
             },
           ],
-          conclusion: t('translation:quarters.q3.labs.lab10.conclusion'),
         },
         {
           id: 11,
@@ -893,7 +882,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q3.labs.lab11.videos.v1'),
             },
           ],
-          conclusion: t('translation:quarters.q3.labs.lab11.conclusion'),
         },
         {
           id: 12,
@@ -971,7 +959,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q3.labs.lab12.videos.v1'),
             },
           ],
-          conclusion: t('translation:quarters.q3.labs.lab12.conclusion'),
         },
         {
           id: 13,
@@ -1053,7 +1040,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q3.labs.lab13.videos.v1'),
             },
           ],
-          conclusion: t('translation:quarters.q3.labs.lab13.conclusion'),
         },
         {
           id: 14,
@@ -1133,7 +1119,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q3.labs.lab14.videos.v1'),
             },
           ],
-          conclusion: t('translation:quarters.q3.labs.lab14.conclusion'),
         },
         {
           id: 15,
@@ -1213,7 +1198,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q3.labs.lab15.videos.v1'),
             },
           ],
-          conclusion: t('translation:quarters.q3.labs.lab15.conclusion'),
         },
       ],
     },
@@ -1299,7 +1283,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q4.labs.lab16.videos.v1'),
             },
           ],
-          conclusion: t('translation:quarters.q4.labs.lab16.conclusion'),
         },
         {
           id: 17,
@@ -1381,7 +1364,6 @@ export const getQuarters = (t: (key: string) => string): Quarter[] => {
               description: t('translation:quarters.q4.labs.lab17.videos.v1'),
             },
           ],
-          conclusion: t('translation:quarters.q4.labs.lab17.conclusion'),
         },
       ],
     },
