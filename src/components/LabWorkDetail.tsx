@@ -348,7 +348,7 @@ export default function LabWorkDetail({
 
         {labWork.theory && (
           <div className="mb-8 pb-8 border-b border-gray-200">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">{tExtra('labworkdetail.theory')}</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">{tExtra('translation:labworkdetail.theory')}</h2>
             <p className="text-gray-700 leading-relaxed whitespace-pre-line">{labWork.theory}</p>
           </div>
         )}
@@ -422,12 +422,12 @@ export default function LabWorkDetail({
                             <span className="text-gray-700 text-base flex-1">{option}</span>
                             {showResult && isCorrect && (
                               <span className="ml-auto text-green-600 text-sm font-semibold">
-                                {tExtra('extra:labworkdetail.answer_correct')}
+                                {tExtra('translation:labworkdetail.answer_correct')}
                               </span>
                             )}
                             {showResult && isSelected && !isCorrect && (
                               <span className="ml-auto text-red-600 text-sm font-semibold">
-                                {tExtra('extra:labworkdetail.answer_incorrect')}
+                                {tExtra('translation:labworkdetail.answer_incorrect')}
                               </span>
                             )}
                           </label>
@@ -438,6 +438,28 @@ export default function LabWorkDetail({
                 );
               })}
             </div>
+            {labWork.conclusion && (
+  <div className="mb-8 pb-8 border-b border-gray-200">
+    <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+      {tExtra('translation:labworkdetail.conclusion')}  {/* Заголовок "Вывод" */}
+    </h2>
+    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
+      <div className="flex items-start gap-3">
+        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+          <span className="text-blue-600 font-bold">✓</span>
+        </div>
+        <div>
+          <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+            {labWork.conclusion}  {/* Текст вывода из labworks.tsx */}
+          </p>
+          <p className="text-sm text-gray-500 mt-3 font-medium">
+            💡 На основе экспериментальных данных и полученных результатов
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
             {submitError && (
               <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">

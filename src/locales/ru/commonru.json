@@ -42,6 +42,11 @@
     "error_sending": "Ошибка при отправке теста:",
     "already_submitted": "Вы уже сдавали этот тест",
     "unrecognized_error": "Неизвестная ошибка",
+    "theory": "Теория",
+    "equipment": "Оборудование",
+    "procedure": "Порядок выполнения",
+    "quiz": "Тест",
+    "conclusion": "Заключение",
 
     "result_show": "Ваш результат:",
     "quest_mode": "(режим гостя)",
